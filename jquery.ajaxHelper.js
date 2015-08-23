@@ -58,6 +58,7 @@
 				});
 			}
 
+			$('body').off('submit', this.selector);
 			event.preventDefault();
 			return false;
 		});
@@ -155,14 +156,9 @@
 			event = event || window.event;
 			event.preventDefault();
 			func.call(this, event);
+			$('body').off('click', this.selector);
 			return false;
 		});
 	};
 
 })(jQuery);
-
-
-
-
-
-
