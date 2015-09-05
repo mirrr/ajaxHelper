@@ -17,8 +17,10 @@
 		options = options || {};
 
 		// Обработчик
+		$('body').off('submit', this.selector);
 		$('body').on('submit', this.selector, function (event) {
 			event = event || window.event;
+			event.preventDefault();
 
 			var $this = $(event.target);
 			var action = options.action || $this.attr('action') || '';
@@ -40,7 +42,19 @@
 
 			var obj = {};
 			$this.serializeArray().forEach(function (el) {
-				obj[el.name] = el.value;
+				if (typeof obj[el.name] === 'undefined' && el.name.indexOf('[]') === -1) {
+					obj[el.name] = el.value;
+				} else {
+					var name = el.name.replace('[]', '');
+
+					if (typeof obj[name] === 'undefined') {
+						obj[name] = [];
+					} else if (!Array.isArray(obj[name])) {
+						obj[name] = [obj[name]];
+					}
+
+					obj[name].push(el.value);
+				}
 			});
 
 			if (settings.check(obj, $this, settings)) {
@@ -58,8 +72,6 @@
 				});
 			}
 
-			$('body').off('submit', this.selector);
-			event.preventDefault();
 			return false;
 		});
 	};
@@ -68,7 +80,9 @@
 
 	/**
 	 * Вешаем обработчик на кнопки действий в таблице
-	 * @param  {Object} options
+	 * (INFO: Вместо объекта опций можно передать ф-ю, отдающую этот объект)
+	 *
+	 * @param  {Object/Function} options
 	 * @example
 	 * $('table .status, table .remove, table .trash').ajaxActionSender ({
 	 * 		url:     'http://...',              // адрес отправки (options.url или window.baseUrl + '/' + options.target)
@@ -103,7 +117,7 @@
 				method: 'GET',
 				remove: false,
 				timeout: 1500,
-				url: options.target ? (window.baseUrl + '/' + options.target) : '',
+				url: opt.target ? ((window.baseUrl ? window.baseUrl + '/' : '') + opt.target) : '',
 				check: (function () {return true;}),
 				success: (function (result) {$.message.ok(result.message);}),
 				error: (function (result) {$.message.ajaxWarn(result);}),
@@ -147,17 +161,84 @@
 	};
 
 
+	/**
+	 * "Умный" обработчик для линков
+	 *
+	 * @param  {Function} func
+	 */
 	$.fn.forceClick = function (func) {
 		if (typeof func !== 'function') {
 			throw new Error('Не указана функция - обработчик');
 		}
 
+		$('body').off('click', this.selector);
 		$('body').on('click', this.selector, function (event) {
 			event = event || window.event;
 			event.preventDefault();
 			func.call(this, event);
-			$('body').off('click', this.selector);
 			return false;
+		});
+		return this;
+	};
+
+
+
+
+	/**
+	 * Простейшая загрузка элементов таблицы или списка
+	 *
+	 * @param  {Object} options
+	 *
+	 * @example
+	 * $('table>body').ajaxActionSender ({
+	 * 		url:     'http://...',              // адрес отправки (options.url или window.baseUrl + '/' + options.target)
+	 * 		// или :
+	 * 		target:  'edit',                    // ajax-контроллер (для кабмина)
+	 * 		timeout: 1500,                      // 1.5 sec.
+	 * 		success: function (result) {....},  // колбек на успешное выполнение (return true - закрыть окно)
+	 * 		error:   function (result) {....}   // колбек на ошибку в ответе сервера
+	 * });
+	 *
+	 */
+	$.fn.listLoad = function (options) {
+		var $this = $(this.selector);
+		options = $.extend({
+			target: $this.data('target') || '',
+			itemTpl: 'item',
+			data: {},
+			method: 'GET',
+			timeout: 1500,
+			success   : (function () {}),
+			error   : (function (result) {
+				$.message.ajaxWarn(result);
+			})
+		}, options);
+
+		if (!options.url && options.target) {
+			options.url =  (window.baseUrl ? window.baseUrl + '/' : '') + options.target;
+		}
+
+		$.ajax({
+			url     : options.url,
+			type    : options.method,
+			data    : options.data,
+			timeout : options.timeout,
+			success : function (result) {
+				$this.tpl(options.itemTpl, result.data);
+
+				if (typeof options.success === 'function') {
+					options.success(result);
+				}
+			},
+			error: function (result) {
+				if (options.noitemsTpl) {
+					$this.tpl(options.noitemsTpl);
+				}
+
+				if (typeof options.error === 'function') {
+					options.error(result);
+				}
+			}
 		});
 	};
 
