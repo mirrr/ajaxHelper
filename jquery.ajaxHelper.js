@@ -154,6 +154,7 @@
 					},
 					error: function (result) {
 						settings.error(result, $this, settings);
+						settings.after();
 					}
 				});
 			}
