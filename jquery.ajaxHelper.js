@@ -224,10 +224,18 @@
 			data    : options.data,
 			timeout : options.timeout,
 			success : function (result) {
-				$this.tpl(options.itemTpl, result.data);
+				if (Array.isArray(result.data) && result.data.length) {
+					$this.tpl(options.itemTpl, result.data);
 
-				if (typeof options.success === 'function') {
-					options.success(result);
+					if (typeof options.success === 'function') {
+						options.success(result);
+					}
+				} else {
+					if (options.noitemsTpl) {
+						$this.tpl(options.noitemsTpl);
+					} else {
+						$this.tpl(options.itemTpl, []);
+					}
 				}
 			},
 			error: function (result) {
