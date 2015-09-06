@@ -35,7 +35,8 @@
 				}),
 				error   : (function (result) {
 					$.message.ajaxWarn(result);
-				})
+				}),
+				after: (function () {})
 			}, options);
 
 			var data = $this.serialize();
@@ -67,8 +68,13 @@
 						if (settings.success(result)) {
 							$.wbox.close();
 						}
+
+						settings.after(result);
 					},
-					error: settings.error
+					error: function (result) {
+						settings.error(result);
+						settings.after(result);
+					}
 				});
 			}
 
@@ -150,11 +156,11 @@
 							$this.closest('tr').hide().remove();
 						}
 
-						settings.after();
+						settings.after(result);
 					},
 					error: function (result) {
 						settings.error(result, $this, settings);
-						settings.after();
+						settings.after(result);
 					}
 				});
 			}
@@ -212,7 +218,8 @@
 			success   : (function () {}),
 			error   : (function (result) {
 				$.message.ajaxWarn(result);
-			})
+			}),
+			after: (function () {})
 		}, options);
 
 		if (!options.url && options.target) {
@@ -238,6 +245,8 @@
 				if (typeof options.success === 'function') {
 					options.success(result);
 				}
+
+				options.after(result);
 			},
 			error: function (result) {
 				if (options.noitemsTpl) {
@@ -247,6 +256,8 @@
 				if (typeof options.error === 'function') {
 					options.error(result);
 				}
+
+				options.after(result);
 			}
 		});
 	};
