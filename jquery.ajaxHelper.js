@@ -58,7 +58,7 @@
 				}
 			});
 
-			if (settings.check(obj, $this, settings)) {
+			settings.ok = function () {
 				$.ajax({
 					url     : settings.url,
 					type    : settings.method,
@@ -76,6 +76,10 @@
 						settings.after(result);
 					}
 				});
+			};
+
+			if (settings.check(obj, $this, settings)) {
+				settings.ok();
 			}
 
 			return false;
@@ -144,8 +148,7 @@
 			});
 
 			var data = $.extend({action: settings.action, id: id}, settings.data);
-
-			if (settings.check(data, $this, settings) && settings.url) {
+			settings.ok = function () {
 				$.ajax({
 					url     : settings.url,
 					type    : settings.method,
@@ -163,6 +166,10 @@
 						settings.after(result);
 					}
 				});
+			};
+
+			if (settings.url && settings.check(data, $this, settings)) {
+				settings.ok();
 			}
 		});
 	};
