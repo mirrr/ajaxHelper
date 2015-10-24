@@ -7,7 +7,7 @@
 	 * $('#form-ajax').ajaxFormSender ({
 	 * 		url:     'http://...',              // адрес отправки (по умолчанию берется из формы или из options.action)
 	 * 		method:  'POST',                    // метод отправки (по умолчанию берется из формы или 'POST')
-	 * 		timeout: 3000,                      // 1.5 sec.
+	 * 		timeout: 15000,                     // 15 sec.
 	 * 		check:   function () {....},        // колбек проверки (return true/false - успешность проверки)
 	 * 		success: function (result) {....},  // колбек на успешное выполнение (return true - закрыть окно)
 	 * 		error:   function (result) {....}   // колбек на ошибку в ответе сервера
@@ -27,7 +27,7 @@
 			var settings = $.extend({
 				url     : ((window.baseUrl && action.indexOf('/') === -1) ? (window.baseUrl + '/') : '') + action,
 				method  : $this.attr('method') || 'POST',
-				timeout : 3000,
+				timeout : 15000,
 				check   : (function () {return true;}),
 				success : (function (result) {
 					$.message.ok(result.message);
@@ -98,7 +98,7 @@
 	 * 		url:     'http://...',              // адрес отправки (options.url или window.baseUrl + '/' + options.target)
 	 * 		method:  'POST',                    // метод отправки (по умолчанию 'GET')
 	 * 		action:  'edit',                    // ajax-действие  (по умолчанию берется из data-action)
-	 * 		timeout: 3000,                      // 1.5 sec.
+	 * 		timeout: 15000,                     // 15 sec.
 	 * 		check:   function () {....},        // колбек проверки (return true/false - успешность проверки)
 	 * 		success: function (result) {....},  // колбек на успешное выполнение (return true - закрыть окно)
 	 * 		error:   function (result) {....}   // колбек на ошибку в ответе сервера
@@ -126,7 +126,7 @@
 				id: null,
 				method: 'GET',
 				remove: false,
-				timeout: 3000,
+				timeout: 15000,
 				url: opt.target ? ((window.baseUrl ? window.baseUrl + '/' : '') + opt.target) : '',
 				check: (function () {return true;}),
 				success: (function (result) {$.message.ok(result.message);}),
@@ -139,7 +139,7 @@
 					settings.thisSelector ? $this : $this.closest('tr')
 				)
 			);
-			var id = sel.data(settings.id || settings.dataId);
+			var id = settings.id || sel.data(settings.dataId);
 
 			settings.dataKeys.forEach(function (el) {
 				if (sel.data(el)) {
@@ -210,7 +210,7 @@
 	 * 		target:  'edit',                    // ajax-контроллер (для кабмина)
 	 * 		itemTpl: 'item',                    // шаблон doT.js
 	 * 		noitemsTpl: 'noitems',              // шаблон doT.js
-	 * 		timeout: 3000,                      // 1.5 sec.
+	 * 		timeout: 15000,                     // 15 sec.
 	 * 		success: function (result) {....},  // колбек на успешное выполнение (return true - закрыть окно)
 	 * 		error:   function (result) {....}   // колбек на ошибку в ответе сервера
 	 * });
@@ -223,7 +223,7 @@
 			itemTpl: 'item',
 			data: {},
 			method: 'GET',
-			timeout: 3000,
+			timeout: 15000,
 			success   : (function () {}),
 			error   : (function (result) {
 				$.message.ajaxWarn(result);

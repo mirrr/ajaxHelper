@@ -1,0 +1,94 @@
+input.switch[type='checkbox'],
+input.switch[type='radio'] {
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  margin: 0 0.2em 0 0;
+  line-height: 2em;
+  position: relative;
+}
+input.switch[type='checkbox'] + label,
+input.switch[type='radio'] + label {
+  cursor: pointer;
+  margin: 0.4em 0;
+  line-height: 1.5em;
+  color: #666666;
+  font-style: italic;
+}
+input.switch[type='checkbox']:not(checked),
+input.switch[type='radio']:not(checked) {
+  pointer-events: none;
+  position: absolute;
+  opacity: 0;
+}
+input.switch[type='checkbox']:not(checked) + label {
+  position: relative;
+  padding: 0 0 0 3.5em;
+}
+input.switch[type='checkbox']:not(checked) + label:before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 2.7em;
+  height: 1.5em;
+  border-radius: 1em;
+  padding: 2px;
+  background: #CDD1DA;
+  box-shadow: inset 0 0.1em 0.3em rgba(0, 0, 0, 0.2);
+}
+input.switch[type='checkbox']:not(checked) + label:after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin-left: 2px;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  background: #FFF;
+  box-shadow: 0 0.1em 0.3em rgba(0, 0, 0, 0.3);
+  transition: all .2s;
+}
+input.switch[type='checkbox']:checked + label:before {
+  background: #9FD468;
+}
+input.switch[type='checkbox']:checked + label:after {
+  left: 1.2em;
+}
+input.switch[type='radio']:not(checked) + label {
+  position: relative;
+  padding: 0 0 0 2.4em;
+}
+input.switch[type='radio']:not(checked) + label:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1em;
+  height: 1em;
+  border: 4px solid #ffffff;
+  border-radius: 1.4em;
+  background: #FFF;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+input.switch[type='radio']:not(checked) + label:after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  background: #88B1CF;
+  box-shadow: inset 0 0.1em 0.3em rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: all .2s;
+}
+input.switch[type='radio']:checked + label:after {
+  opacity: 1;
+}
+input.switch[type='checkbox']:disabled + label,
+input.switch[type='radio']:disabled + label {
+  opacity: 0.5;
+}
